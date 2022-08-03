@@ -21,6 +21,8 @@ public:
     WageCalculator(QWidget *parent = nullptr);
     ~WageCalculator();
 
+    void save_data();
+
 private slots:
     void calculate_wage();
     void calculate_wage_after_tax();

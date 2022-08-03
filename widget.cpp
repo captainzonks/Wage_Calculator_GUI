@@ -3,6 +3,7 @@
 
 #include <fstream>
 #include <sys/stat.h>
+#include <QMessageBox>
 
 WageCalculator::WageCalculator(QWidget *parent)
     : QWidget(parent)
@@ -39,27 +40,41 @@ WageCalculator::WageCalculator(QWidget *parent)
 
     // save data / overwrite file
     connect(ui->save_button, &QPushButton::clicked, this, [=](){
-        data_.set_wage(wage_);
-        data_.add_hours(hours_);
-        data_.add_tips(tips_);
+        int ret = QMessageBox::warning(this, tr("Wage Calculator"),
+                                       tr("Do you want to save your changes?"),
+                                       QMessageBox::Save | QMessageBox::Cancel,
+                                       QMessageBox::Cancel);
 
-        data_.set_today_hours(hours_);
-        data_.set_today_tips(tips_);
-
-        std::fstream file("wage_data", std::fstream::in | std::fstream::out);
-
-        file << data_;
-
-        file.close();
-
-        initialize_data();
-        calculate_average_wage();
+        if (ret == QMessageBox::Save) {
+            save_data();
+        } else {
+            // do nothing
+        }
     });
 }
 
 WageCalculator::~WageCalculator()
 {
     delete ui;
+}
+
+void WageCalculator::save_data()
+{
+    data_.set_wage(wage_);
+    data_.add_hours(hours_);
+    data_.add_tips(tips_);
+
+    data_.set_today_hours(hours_);
+    data_.set_today_tips(tips_);
+
+    std::fstream file("wage_data", std::fstream::in | std::fstream::out);
+
+    file << data_;
+
+    file.close();
+
+    initialize_data();
+    calculate_average_wage();
 }
 
 void WageCalculator::calculate_wage()
