@@ -40,7 +40,7 @@ WageCalculator::WageCalculator(QWidget *parent)
 
     // save data / overwrite file
     connect(ui->save_button, &QPushButton::clicked, this, [=](){
-        int ret = QMessageBox::warning(this, tr("Wage Calculator"),
+        int ret = QMessageBox::question(this, tr("Wage Calculator"),
                                        tr("Do you want to save your changes?"),
                                        QMessageBox::Save | QMessageBox::Cancel,
                                        QMessageBox::Cancel);
